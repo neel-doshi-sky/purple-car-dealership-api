@@ -28,8 +28,10 @@ public class CarController {
     }
 
     /**
-     * @param body {"brand":"asd","model":"asd2","age":"123","mileage":"123456","engineSize":"1.4"}
-     * @return
+     * Endpoint to add a new car to the database
+     *
+     * @param body containing details of the car e.g {"brand":"asd","model":"asd2","age":"123","mileage":"123456","engineSize":"1.4"}
+     * @return CustomResponseEntity which will contain the response of the request
      */
     @PostMapping("/create")
     public CustomResponseEntity createCar(@RequestBody HashMap<String, String> body) {
@@ -40,21 +42,24 @@ public class CarController {
             Integer age = Integer.parseInt(body.get("age"));
             Integer mileage = Integer.parseInt(body.get("mileage"));
             Double engineSize = Double.parseDouble(body.get("engineSize"));
+
             Car car = new Car(brand, model, age, mileage, engineSize);
             Long idOfNewCar = carService.createCar(car);
+
             if (idOfNewCar == null) {
                 log.error(Constants.SERVER_ERROR);
-                return new CustomResponseEntity("CUSTOM_ERROR_SERVER_ERROR", Constants.SERVER_ERROR,
-                        HttpStatus.INTERNAL_SERVER_ERROR);
+                return new CustomResponseEntity("CUSTOM_ERROR_SERVER_ERROR", Constants.SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            // return new ResponseEntity<>("The car was created", HttpStatus.CREATED);
-            return null;
+
+            return new CustomResponseEntity("The car was created", HttpStatus.CREATED);
+
         } catch (NullPointerException | NumberFormatException | ClassCastException e) {
             log.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, Constants.INVALID_BODY, e);
+            return new CustomResponseEntity("CUSTOM_ERROR_BAD_REQUEST", Constants.INVALID_BODY, HttpStatus.BAD_REQUEST);
+
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.SERVER_ERROR, e);
+            return new CustomResponseEntity("CUSTOM_ERROR_SERVER_ERROR", Constants.SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

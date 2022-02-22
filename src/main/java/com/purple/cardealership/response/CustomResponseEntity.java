@@ -1,17 +1,10 @@
 package com.purple.cardealership.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.LinkedHashMap;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-// @Getter
-// @Setter
-// @AllArgsConstructor
+import java.util.LinkedHashMap;
+
 public class CustomResponseEntity extends ResponseEntity<LinkedHashMap<String, String>> {
 
     public CustomResponseEntity(String message, HttpStatus httpStatus) {
@@ -25,16 +18,16 @@ public class CustomResponseEntity extends ResponseEntity<LinkedHashMap<String, S
     private static LinkedHashMap<String, String> LinkedHashMapBuilder(String message, HttpStatus httpStatus) {
         LinkedHashMap<String, String> responseMap = new LinkedHashMap<>();
         responseMap.put("message", message);
-        responseMap.put("status", httpStatus.toString());
+        responseMap.put("status", String.valueOf(httpStatus.value()));
         return responseMap;
     }
 
     private static LinkedHashMap<String, String> LinkedHashMapBuilder(String errorMessage, String internalErrorCode,
-            HttpStatus httpStatus) {
+                                                                      HttpStatus httpStatus) {
         LinkedHashMap<String, String> responseMap = new LinkedHashMap<>();
         responseMap.put("error", errorMessage);
         responseMap.put("internal-error-code", internalErrorCode);
-        responseMap.put("status", httpStatus.toString());
+        responseMap.put("status", String.valueOf(httpStatus.value()));
         return responseMap;
     }
 }

@@ -10,5 +10,4 @@ public class Constants {
     public static final String INVALID_BODY = "Missing/invalid data in post body";
 
 
-
 }
