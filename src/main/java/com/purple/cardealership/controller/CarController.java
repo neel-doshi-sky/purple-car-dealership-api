@@ -1,9 +1,13 @@
 package com.purple.cardealership.controller;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import com.purple.cardealership.entity.Car;
+import com.purple.cardealership.repository.CarRepository;
+import com.purple.cardealership.service.CarService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/car")
 @Slf4j
 public class CarController {
+    private final CarService carService;
+
+    public CarController(CarService carService) {
+        this.carService = carService;
+    }
 
     /**
      * @param body {"brand":"asd","model":"asd2","age":"123","mileage":"123456","engineSize":"1.4"}
@@ -31,9 +40,9 @@ public class CarController {
             Integer age = Integer.parseInt(body.get("age"));
             Integer mileage = Integer.parseInt(body.get("mileage"));
             Double engineSize = Double.parseDouble(body.get("engineSize"));
-            System.out.println(engineSize);
             Car car = new Car(brand, model, age, mileage, engineSize);
             // return new ResponseEntity<>("Success", HttpStatus.OK);
+            Long idOfNewCar = carService.createCar(car);
             return null;
         } catch (NullPointerException e) {
             log.error(e.getMessage());
@@ -42,6 +51,9 @@ public class CarController {
             log.error(e.getMessage());
             throw e;
         } catch (ClassCastException e) {
+            log.error(e.getMessage());
+            throw e;
+        } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
             throw e;
         }
