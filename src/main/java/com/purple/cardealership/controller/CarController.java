@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import com.purple.cardealership.Constants;
 import com.purple.cardealership.entity.Car;
-import com.purple.cardealership.response.CustomResponse;
+import com.purple.cardealership.response.CustomResponseEntity;
 import com.purple.cardealership.service.CarService;
 
 import org.springframework.http.HttpStatus;
@@ -32,9 +32,7 @@ public class CarController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<CustomResponse> createCar(@RequestBody HashMap<String, String> body) {
-
-        CustomResponse customResponse;
+    public CustomResponseEntity createCar(@RequestBody HashMap<String, String> body) {
 
         try {
             String brand = body.get("brand");
@@ -46,9 +44,10 @@ public class CarController {
             Long idOfNewCar = carService.createCar(car);
             if (idOfNewCar == null) {
                 log.error(Constants.SERVER_ERROR);
-               return new ResponseEntity<>(new CustomResponse("CUSTOM-X-ERROR", HttpStatus.INTERNAL_SERVER_ERROR, Constants.SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
+                return new CustomResponseEntity("CUSTOM_ERROR_SERVER_ERROR", Constants.SERVER_ERROR,
+                        HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            //return new ResponseEntity<>("The car was created", HttpStatus.CREATED);
+            // return new ResponseEntity<>("The car was created", HttpStatus.CREATED);
             return null;
         } catch (NullPointerException | NumberFormatException | ClassCastException e) {
             log.error(e.getMessage());
