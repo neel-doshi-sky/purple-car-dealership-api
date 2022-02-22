@@ -1,11 +1,13 @@
 package com.purple.cardealership.response;
 
+import com.purple.cardealership.entity.Car;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
-public class CustomResponseEntity extends ResponseEntity<LinkedHashMap<String, String>> {
+public class CustomResponseEntity extends ResponseEntity<LinkedHashMap<String, Object>> {
 
     public CustomResponseEntity(String message, HttpStatus httpStatus) {
         super(LinkedHashMapBuilder(message, httpStatus), httpStatus);
@@ -15,19 +17,32 @@ public class CustomResponseEntity extends ResponseEntity<LinkedHashMap<String, S
         super(LinkedHashMapBuilder(errorMessage, internalErrorCode, httpStatus), httpStatus);
     }
 
-    private static LinkedHashMap<String, String> LinkedHashMapBuilder(String message, HttpStatus httpStatus) {
-        LinkedHashMap<String, String> responseMap = new LinkedHashMap<>();
+    public CustomResponseEntity(String message, HttpStatus httpStatus, List<Car> resultList) {
+        super(LinkedHashMapBuilder(message, httpStatus, resultList), httpStatus);
+    }
+
+    private static LinkedHashMap<String, Object> LinkedHashMapBuilder(String message, HttpStatus httpStatus) {
+        LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
         responseMap.put("message", message);
         responseMap.put("status", String.valueOf(httpStatus.value()));
         return responseMap;
     }
 
-    private static LinkedHashMap<String, String> LinkedHashMapBuilder(String errorMessage, String internalErrorCode,
+    private static LinkedHashMap<String, Object> LinkedHashMapBuilder(String errorMessage, String internalErrorCode,
                                                                       HttpStatus httpStatus) {
-        LinkedHashMap<String, String> responseMap = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
         responseMap.put("error", errorMessage);
         responseMap.put("internal-error-code", internalErrorCode);
         responseMap.put("status", String.valueOf(httpStatus.value()));
         return responseMap;
     }
+
+    private static LinkedHashMap<String, Object> LinkedHashMapBuilder(String message, HttpStatus httpStatus, List<Car> resultList) {
+        LinkedHashMap<String, Object> responseMap = new LinkedHashMap<>();
+        responseMap.put("message", message);
+        responseMap.put("status", String.valueOf(httpStatus.value()));
+        responseMap.put("resultList", resultList);
+        return responseMap;
+    }
+
 }

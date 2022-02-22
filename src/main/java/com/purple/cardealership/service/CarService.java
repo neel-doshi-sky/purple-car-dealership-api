@@ -6,6 +6,8 @@ import com.purple.cardealership.repository.CarRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class CarService {
@@ -25,5 +27,14 @@ public class CarService {
     public Long createCar(Car car) throws IllegalArgumentException {
         log.info("saving car " + car.toString());
         return carRepository.save(car).getId();
+    }
+
+    /**
+     * Method to get a list of all cars in the database
+     *
+     * @return list of cars
+     */
+    public List<Car> readCars() {
+        return carRepository.findAll();
     }
 }

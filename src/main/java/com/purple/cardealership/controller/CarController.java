@@ -1,6 +1,7 @@
 package com.purple.cardealership.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.purple.cardealership.Constants;
 import com.purple.cardealership.entity.Car;
@@ -9,10 +10,7 @@ import com.purple.cardealership.service.CarService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.server.ResponseStatusException;
@@ -34,7 +32,7 @@ public class CarController {
      * @return CustomResponseEntity which will contain the response of the request
      */
     @PostMapping("/create")
-    public CustomResponseEntity createCar(@RequestBody HashMap<String, String> body) {
+    public CustomResponseEntity create(@RequestBody HashMap<String, String> body) {
 
         try {
             String brand = body.get("brand");
@@ -61,5 +59,16 @@ public class CarController {
             log.error(e.getMessage());
             return new CustomResponseEntity("CUSTOM_ERROR_SERVER_ERROR", Constants.SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Endpoint to return all available cars
+     *
+     * @return CustomResponseEntity with result list
+     */
+    @GetMapping("/read")
+    public CustomResponseEntity read() {
+        List<Car> resultsList = carService.readCars();
+        return new CustomResponseEntity("Successfully fetched cars", HttpStatus.OK, resultsList);
     }
 }

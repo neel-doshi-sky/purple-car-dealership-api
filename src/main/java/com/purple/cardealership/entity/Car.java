@@ -1,6 +1,7 @@
 package com.purple.cardealership.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
@@ -12,14 +13,22 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private final String brand;
-    private final String model;
-    private final Integer age;
-    private final Integer mileage;
-    private final Double engineSize;
+    private String brand;
+    private String model;
+    private Integer age;
+    private Integer mileage;
+    private Double engineSize;
+
+    public Car(String brand, String model, Integer age, Integer mileage, Double engineSize) {
+        this.brand = brand;
+        this.model = model;
+        this.age = age;
+        this.mileage = mileage;
+        this.engineSize = engineSize;
+    }
 }
