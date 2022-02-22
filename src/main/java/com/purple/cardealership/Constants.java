@@ -9,5 +9,7 @@ public class Constants {
 
     public static final String INVALID_BODY = "Missing/invalid data in post body";
 
+    public static final String INVALID_PATH_VARIABLE = "Invalid path variable(s)";
+
 
 }
