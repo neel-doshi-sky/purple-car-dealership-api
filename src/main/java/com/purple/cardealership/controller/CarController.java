@@ -15,11 +15,9 @@ import com.purple.cardealership.service.CarService;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/car")
@@ -87,7 +85,8 @@ public class CarController {
      * Endpoint to update a car or create a new car if no id is provided in the body
      *
      * @param body the body containing details of the car e.g
-     *             *             {"id": "1", "brand":"asd","model":"asd2","age":"123","mileage":"123456","engineSize":"1.4"}
+     *             * {"id": "1",
+     *             "brand":"asd","model":"asd2","age":"123","mileage":"123456","engineSize":"1.4"}
      * @return CustomResponseEntity with updated/created car returned
      */
     @PutMapping("/update")
@@ -133,7 +132,8 @@ public class CarController {
             carService.deleteCar(id);
             return new CustomResponseEntity("Successfully deleted car with ID: " + id, HttpStatus.OK);
         } catch (NullPointerException | EmptyResultDataAccessException e) {
-            return new CustomResponseEntity(Constants.INVALID_PATH_VARIABLE, "CUSTOM_ERROR_BAD_REQUEST", HttpStatus.BAD_REQUEST);
+            return new CustomResponseEntity(Constants.INVALID_PATH_VARIABLE, "CUSTOM_ERROR_BAD_REQUEST",
+                    HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.purple.cardealership.service;
 
-import com.purple.cardealership.Constants;
 import com.purple.cardealership.MissingArgsException;
 import com.purple.cardealership.entity.Car;
 import com.purple.cardealership.repository.CarRepository;
@@ -57,13 +56,16 @@ public class CarService {
      * @param mileage    the mileage of the car
      * @param engineSize the engine size of the car
      * @return the newly updated/created car
-     * @throws IllegalArgumentException the IllegalArgumentException if invalid arguments provided
-     * @throws MissingArgsException     the MissingArgsException if arguments are missing
-     * @throws EntityNotFoundException  the EntityNotFoundException if entity not found
+     * @throws IllegalArgumentException the IllegalArgumentException if invalid
+     *                                  arguments provided
+     * @throws MissingArgsException     the MissingArgsException if arguments are
+     *                                  missing
+     * @throws EntityNotFoundException  the EntityNotFoundException if entity not
+     *                                  found
      */
     public Car updateOrCreateCar(final Long id, final String brand, final String model, final Integer age,
-                                 final Integer mileage,
-                                 Double engineSize) throws IllegalArgumentException, MissingArgsException, EntityNotFoundException {
+            final Integer mileage,
+            Double engineSize) throws IllegalArgumentException, MissingArgsException, EntityNotFoundException {
         if (id == null) {
             return createCarFromUpdate(brand, model, age, mileage, engineSize);
         } else {
@@ -80,11 +82,13 @@ public class CarService {
      * @param mileage    the mileage of the car
      * @param engineSize the engine size of the car
      * @return the newly updated/created car
-     * @throws IllegalArgumentException the IllegalArgumentException if invalid arguments provided
-     * @throws MissingArgsException     the MissingArgsException if arguments are missing
+     * @throws IllegalArgumentException the IllegalArgumentException if invalid
+     *                                  arguments provided
+     * @throws MissingArgsException     the MissingArgsException if arguments are
+     *                                  missing
      */
     private Car createCarFromUpdate(final String brand, final String model, final Integer age, final Integer mileage,
-                                    final Double engineSize)
+            final Double engineSize)
             throws MissingArgsException, IllegalArgumentException {
         if (Stream.of(brand, model, age, mileage, engineSize).allMatch(Objects::nonNull)) {
             Car car = new Car(brand, model, age, mileage, engineSize);
@@ -105,10 +109,11 @@ public class CarService {
      * @param mileage    the mileage of the car
      * @param engineSize the engine size of the car
      * @return the newly updated/created car
-     * @throws EntityNotFoundException the EntityNotFoundException if entity not found
+     * @throws EntityNotFoundException the EntityNotFoundException if entity not
+     *                                 found
      */
     private Car updateCar(@NonNull final Long id, final String brand, final String model, final Integer age,
-                          final Integer mileage, final Double engineSize) throws EntityNotFoundException {
+            final Integer mileage, final Double engineSize) throws EntityNotFoundException {
         Car car = carRepository.getById(id);
         if (brand != null) {
             car.setBrand(brand);
@@ -133,7 +138,8 @@ public class CarService {
      * Method to delete a car in the database by id
      *
      * @param id the id of the car to delete
-     * @throws EmptyResultDataAccessException the EmptyResultDataAccessException if unable to delete car
+     * @throws EmptyResultDataAccessException the EmptyResultDataAccessException if
+     *                                        unable to delete car
      */
     public void deleteCar(@NonNull final Long id) throws EmptyResultDataAccessException {
         carRepository.deleteById(id);
