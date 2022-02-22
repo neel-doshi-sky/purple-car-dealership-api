@@ -4,6 +4,8 @@ import com.purple.cardealership.Constants;
 import com.purple.cardealership.MissingArgsException;
 import com.purple.cardealership.entity.Car;
 import com.purple.cardealership.repository.CarRepository;
+
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,7 @@ public class CarService {
      * @throws IllegalArgumentException the IllegalArgumentException if the entity
      *                                  is null
      */
-    public Car createCar(Car car) throws IllegalArgumentException {
+    public Car createCar(@NonNull final Car car) throws IllegalArgumentException {
         log.info("saving car " + car.toString());
         return carRepository.save(car);
     }
@@ -43,7 +45,8 @@ public class CarService {
         return carRepository.findAll();
     }
 
-    public Car updateOrCreateCar(Long id, String brand, String model, Integer age, Integer mileage,
+    public Car updateOrCreateCar(final Long id, final String brand, final String model, final Integer age,
+            final Integer mileage,
             Double engineSize) throws IllegalArgumentException, MissingArgsException, EntityNotFoundException {
         if (id == null) {
             return createCarFromUpdate(brand, model, age, mileage, engineSize);
@@ -52,7 +55,8 @@ public class CarService {
         }
     }
 
-    private Car createCarFromUpdate(String brand, String model, Integer age, Integer mileage, Double engineSize)
+    private Car createCarFromUpdate(final String brand, final String model, final Integer age, final Integer mileage,
+            final Double engineSize)
             throws MissingArgsException, IllegalArgumentException {
         if (Stream.of(brand, model, age, mileage, engineSize).allMatch(value -> value != null)) {
             Car car = new Car(brand, model, age, mileage, engineSize);
@@ -63,8 +67,8 @@ public class CarService {
         }
     }
 
-    private Car updateCar(Long id, String brand, String model, Integer age, Integer mileage, Double engineSize)
-            throws EntityNotFoundException {
+    private Car updateCar(@NonNull final Long id, final String brand, final String model, final Integer age,
+            final Integer mileage, final Double engineSize) throws EntityNotFoundException {
         Car car = carRepository.getById(id);
         if (brand != null) {
             car.setBrand(brand);
