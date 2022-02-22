@@ -1,19 +1,20 @@
 package com.purple.cardealership.service;
 
-import com.purple.cardealership.MissingArgsException;
-import com.purple.cardealership.entity.Car;
-import com.purple.cardealership.repository.CarRepository;
-
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
+
+import com.purple.cardealership.MissingArgsException;
+import com.purple.cardealership.entity.Car;
+import com.purple.cardealership.repository.CarRepository;
+
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j

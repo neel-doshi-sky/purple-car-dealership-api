@@ -11,5 +11,4 @@ public class Constants {
 
     public static final String INVALID_PATH_VARIABLE = "Invalid path variable(s)";
 
-
 }

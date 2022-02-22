@@ -1,9 +1,9 @@
 package com.purple.cardealership.response;
 
+import java.util.LinkedHashMap;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.LinkedHashMap;
 
 public class CustomResponseEntity extends ResponseEntity<LinkedHashMap<String, Object>> {
 
