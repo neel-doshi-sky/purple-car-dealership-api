@@ -1,5 +1,7 @@
 package com.purple.cardealership.repository;
 
+import javax.transaction.Transactional;
+
 import com.purple.cardealership.entity.Car;
 
 import org.springframework.data.jpa.repository.JpaRepository;
