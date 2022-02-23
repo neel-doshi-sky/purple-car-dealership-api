@@ -11,7 +11,7 @@ import com.purple.cardealership.entity.Car;
 import com.purple.cardealership.repository.CarRepository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.NonNull;
@@ -41,12 +41,16 @@ public class CarService {
 
     /**
      * Method to get a list of all cars in the database
+     * 
+     * @param sortBy
      *
      * @return list of cars
      */
     public List<Car> readCars(String brand, Integer ageStart, Integer ageEnd, Integer mileageStart,
-                             Integer mileageEnd, Double engineSizeStart, Double engineSizeStop) {
-        return carRepository.findCar(brand, ageStart, ageEnd, mileageStart, mileageEnd, engineSizeStart, engineSizeStop);
+            Integer mileageEnd, Double engineSizeStart, Double engineSizeStop, String sortBy) {
+        Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
+        return carRepository.findCar(brand, ageStart, ageEnd, mileageStart, mileageEnd, engineSizeStart,
+                engineSizeStop, sort);
 
     }
 

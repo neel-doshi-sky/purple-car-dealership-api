@@ -15,7 +15,15 @@ import com.purple.cardealership.service.CarService;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +31,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/car")
 @Slf4j
 public class CarController {
+    private enum SortByOption {
+        MILEAGE("mileage"), AGE("age"), BRAND("brand"), ENGINESIZE("engineSize");
+
+        private final String name;
+
+        private SortByOption(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
     private final CarService carService;
 
     public CarController(CarService carService) {
@@ -72,6 +95,7 @@ public class CarController {
 
     /**
      * Endpoint to return all available cars
+     * 
      * @param brand
      * @param ageStart
      * @param ageEnd
@@ -79,21 +103,39 @@ public class CarController {
      * @param mileageEnd
      * @param engineSizeStart
      * @param engineSizeEnd
+     * @param sortBy          Options: MILEAGE, AGE, ENGINGESIZE, BRAND (default)
      * @return CustomResponseEntity with result list
      */
     @GetMapping("/read")
-    public CustomResponseEntity read(@RequestParam(required = false) String brand, @RequestParam(required = false) Integer ageStart, @RequestParam(required = false) Integer ageEnd, @RequestParam(required = false) Integer mileageStart,
-                                     @RequestParam(required = false) Integer mileageEnd, @RequestParam(required = false) Double engineSizeStart, @RequestParam(required = false) Double engineSizeEnd) {
-        List<Car> resultsList = carService.readCars(brand, ageStart, ageEnd, mileageStart, mileageEnd, engineSizeStart, engineSizeEnd);
+    public CustomResponseEntity read(@RequestParam(required = false) String brand,
+            @RequestParam(required = false) Integer ageStart,
+            @RequestParam(required = false) Integer ageEnd,
+            @RequestParam(required = false) Integer mileageStart,
+            @RequestParam(required = false) Integer mileageEnd,
+            @RequestParam(required = false) Double engineSizeStart,
+            @RequestParam(required = false) Double engineSizeEnd,
+            @RequestParam(required = false) SortByOption sortBy) {
+        if (sortBy == null) {
+            sortBy = SortByOption.BRAND;
+        }
+        try {
+            List<Car> resultsList = carService.readCars(brand, ageStart, ageEnd, mileageStart, mileageEnd,
+                    engineSizeStart,
+                    engineSizeEnd, sortBy.toString());
 
-        return new CustomResponseEntity("Successfully fetched cars", HttpStatus.OK, resultsList);
+            return new CustomResponseEntity("Successfully fetched cars", HttpStatus.OK, resultsList);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new CustomResponseEntity(e.getMessage(), Constants.INTERNAL_SERVER_ERROR,
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
      * Endpoint to update a car or create a new car if no id is provided in the body
      *
      * @param body the body containing details of the car e.g
-     *             * {"id": "1",
+     *             {"id": "1",
      *             "brand":"asd","model":"asd2","age":"123","mileage":"123456","engineSize":"1.4"}
      * @return CustomResponseEntity with updated/created car returned
      */
@@ -140,6 +182,7 @@ public class CarController {
             carService.deleteCar(id);
             return new CustomResponseEntity("Successfully deleted car with ID: " + id, HttpStatus.OK);
         } catch (NullPointerException | EmptyResultDataAccessException e) {
+            log.error(e.getMessage());
             return new CustomResponseEntity(Constants.INVALID_PATH_VARIABLE, "CUSTOM_ERROR_BAD_REQUEST",
                     HttpStatus.BAD_REQUEST);
         }
