@@ -24,14 +24,21 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.cucumber:cucumber-java:7.2.3'
+	implementation 'com.epages:wiremock-spring-boot-starter:0.8.0'
+	implementation 'io.github.ricall.junit5-wiremock:junit5-wiremock:2.0.0'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.cucumber:cucumber-java8:7.0.0'
-	testImplementation 'io.cucumber:cucumber-junit:7.0.0'
-	testImplementation 'io.cucumber:cucumber-spring:2.1.0'
+	testImplementation 'io.cucumber:cucumber-java8:7.2.3'
+	testImplementation 'io.cucumber:cucumber-junit:7.2.3'
+	testImplementation 'io.cucumber:cucumber-spring:7.2.3'
+	testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.2.3'
+	testImplementation 'com.github.tomakehurst:wiremock-jre8:2.32.0'
+
+
 
 
 }
