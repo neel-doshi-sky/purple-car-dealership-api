@@ -37,6 +37,9 @@ dependencies {
 	testImplementation 'io.cucumber:cucumber-spring:7.2.3'
 	testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.2.3'
 	testImplementation 'com.github.tomakehurst:wiremock-jre8:2.32.0'
+	testImplementation 'org.junit.vintage:junit-vintage-engine:5.7.2'
+
+
 
 
 
@@ -45,4 +48,19 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+task cucumberCli() {
+	dependsOn assemble, testClasses
+	doLast {
+		javaexec {
+			main = "io.cucumber.core.cli.Main"
+			classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+			args = [
+					'--plugin', 'pretty',
+					'--plugin', 'html:target/cucumber-report.html',
+					'--glue', 'com.baeldung.cucumber',
+					'src/test/java']
+		}
+	}
 }
