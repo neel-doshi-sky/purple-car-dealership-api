@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CarRepository extends JpaRepository<Car, Long> {
-	@Query(value = "SELECT * FROM Car c WHERE " +
+	@Query(value = "SELECT c FROM Car c WHERE " +
 			"(:brand is null or c.brand = :brand) and " +
 			"(:ageStart is null or c.age >= :ageStart) and " +
 			"(:ageEnd is null or c.age <= :ageEnd) and  " +
