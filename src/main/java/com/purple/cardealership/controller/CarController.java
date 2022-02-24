@@ -80,7 +80,7 @@ public class CarController {
                         HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
-            return new CustomResponseEntity("The car was created", HttpStatus.CREATED);
+            return new CustomResponseEntity("The car was created with id:" + newCar.getId(), HttpStatus.CREATED);
 
         } catch (NullPointerException | NumberFormatException | ClassCastException | MissingArgsException
                 | EntityNotFoundException e) {
