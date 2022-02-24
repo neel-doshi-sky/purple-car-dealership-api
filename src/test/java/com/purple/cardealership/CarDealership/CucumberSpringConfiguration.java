@@ -2,17 +2,22 @@ package com.purple.cardealership.CarDealership;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.springframework.boot.test.context.SpringBootTest;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import wiremock.org.apache.http.HttpEntity;
 import wiremock.org.apache.http.HttpResponse;
 import wiremock.org.apache.http.client.methods.HttpPost;
 import wiremock.org.apache.http.entity.StringEntity;
 import wiremock.org.apache.http.impl.client.CloseableHttpClient;
 import wiremock.org.apache.http.impl.client.HttpClients;
+import wiremock.org.apache.http.util.EntityUtils;
 
 @CucumberContextConfiguration
 @SpringBootTest
@@ -43,10 +48,15 @@ public class CucumberSpringConfiguration {
         assertEquals("201", String.valueOf(response.getStatusLine().getStatusCode()));
     }
 
-    @And("^ a message of The car was created")
+    @And("^a message of \"The car was created\"")
     public void the_user_gets_a_success_message() throws Throwable {
         // throw new PendingException();
-        assertEquals("asd", "asd");
+        // EntityUtils.toString(response.getEntity(), "UTF-8")
+        HttpEntity entity = response.getEntity();
+
+        String body = EntityUtils.toString(entity, "UTF-8");
+        JsonObject jsonBody = JsonParser.parseString(body).getAsJsonObject();
+        assertEquals("The car was created", jsonBody.get("message").getAsString());
     }
 
 }

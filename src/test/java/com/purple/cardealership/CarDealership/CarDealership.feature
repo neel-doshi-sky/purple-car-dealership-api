@@ -3,4 +3,4 @@ Feature: Testing car dealership
     When the body contains valid data
     And the user calls the create endpoint
     Then the user should get a response status code of 201
-#    And a message of "The car was created"
+    And a message of "The car was created"
