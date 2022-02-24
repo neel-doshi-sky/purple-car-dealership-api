@@ -16,7 +16,6 @@ Feature: Testing car dealership
     And the user calls the get endpoint
     Then the user should get a response status code of 200
     And a "message" of "Successfully fetched cars"
-    And a results of cars
-#    And we get result of a car
+    And a results of car 1
 
 

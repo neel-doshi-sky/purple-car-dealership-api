@@ -2,6 +2,8 @@ package com.purple.cardealership.CarDealership;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Objects;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -19,19 +21,17 @@ import wiremock.org.apache.http.impl.client.CloseableHttpClient;
 import wiremock.org.apache.http.impl.client.HttpClients;
 import wiremock.org.apache.http.util.EntityUtils;
 
-import java.util.Objects;
-
 @CucumberContextConfiguration
 @SpringBootTest
-public class CucumberSpringConfiguration {
+public class StepDefs {
     HttpResponse response;
     String jsonString = "{}";
     String body = "";
     CloseableHttpClient httpClient = HttpClients.createDefault();
 
     @When("the body contains {string} data")
-    public void the_user_enters_invalid_or_valid_data(String status){
-        if(Objects.equals(status, "valid")){
+    public void the_user_enters_invalid_or_valid_data(String status) {
+        if (Objects.equals(status, "valid")) {
             jsonString = "{\"brand\":\"asd\",\"model\":\"asd2\",\"age\":\"123\",\"mileage\":\"123456\",\"engineSize\":\"1.4\"}";
         } else {
             jsonString = "{\"model\":\"asd2\",\"age\":\"123\",\"mileage\":\"123456\",\"engineSize\":\"1.4\"}";
@@ -51,33 +51,32 @@ public class CucumberSpringConfiguration {
     }
 
     @Then("the user should get a response status code of {int}")
-    public void the_user_gets_a_response_code(int code){
+    public void the_user_gets_a_response_code(int code) {
         assertEquals(code, response.getStatusLine().getStatusCode());
     }
 
     @And("a {string} of {string}")
-    public void the_user_gets_a_body_containing_key_value_pair(String key, String value){
+    public void the_user_gets_a_body_containing_key_value_pair(String key, String value) {
         JsonObject jsonBody = JsonParser.parseString(body).getAsJsonObject();
         assertEquals(value, jsonBody.get(key).getAsString());
     }
 
-    @And("a results of cars")
-    public void the_user_gets_results_of_cars(){
+    @And("a results of car 1")
+    public void the_user_gets_results_of_cars() {
         JsonObject jsonBody = JsonParser.parseString(body).getAsJsonObject();
-        String result = jsonBody.get("results").getAsJsonArray().get(0).getAsJsonObject().get("id").getAsString();
-        assertEquals("1",result);
+        JsonObject result = jsonBody.get("results").getAsJsonArray().get(0).getAsJsonObject();
+        JsonObject expectedResult = JsonParser.parseString(
+                "{\"id\": 1, \"brand\":\"asd\",\"model\":\"asd2\",\"age\":123,\"mileage\":123456,\"engineSize\":1.4}")
+                .getAsJsonObject();
+        assertEquals(expectedResult, result);
     }
-
 
     @And("the user calls the get endpoint")
     public void the_user_calls_get() throws Throwable {
-        HttpGet request =  new HttpGet("http://localhost:8080/car/read");
+        HttpGet request = new HttpGet("http://localhost:8080/car/read");
         response = httpClient.execute(request);
         body = EntityUtils.toString(response.getEntity(), "UTF-8");
 
     }
-
-
-
 
 }

@@ -51,9 +51,11 @@ tasks.named('test') {
 }
 
 task cucumber() {
-	dependsOn assemble, testClasses
-	doLast {
-		javaexec {
+    def profile = findProperty("spring.profiles.active") ?: ""
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            systemProperties = ['spring.profiles.active': profile]
 			main = "io.cucumber.core.cli.Main"
 			classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
 			args = [
