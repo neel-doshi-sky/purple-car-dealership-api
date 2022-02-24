@@ -1,9 +1,7 @@
-package com.purple.cardealership.CarDealership;
+package com.purple.cardealership;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-
-import com.purple.cardealership.CarDealershipApplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;

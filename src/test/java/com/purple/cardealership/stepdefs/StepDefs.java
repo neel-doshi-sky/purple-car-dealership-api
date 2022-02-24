@@ -1,4 +1,4 @@
-package com.purple.cardealership.CarDealership;
+package com.purple.cardealership.stepdefs;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,6 +28,7 @@ public class StepDefs {
     String jsonString = "{}";
     String body = "";
     CloseableHttpClient httpClient = HttpClients.createDefault();
+    String getParams = "";
 
     @When("the body contains {string} data")
     public void the_user_enters_invalid_or_valid_data(String status) {
@@ -36,7 +37,33 @@ public class StepDefs {
         } else {
             jsonString = "{\"model\":\"asd2\",\"age\":\"123\",\"mileage\":\"123456\",\"engineSize\":\"1.4\"}";
         }
+    }
 
+    @When("the get request has {word} params")
+    public void set_get_params(String paramTypes) {
+        switch (paramTypes) {
+            case "no":
+                getParams = "";
+                break;
+            case "brand":
+                getParams = "?brand=asd";
+                break;
+            case "age":
+                getParams = "?ageStart=100&ageStop=200";
+                break;
+            case "mileage":
+                getParams = "?mileageStart=123455&ageStop=123457";
+                break;
+            case "engineSize":
+                getParams = "?engineSizeStart=1.3&engineSizeStop=1.5";
+                break;
+            case "engineSizeFail":
+                getParams = "?engineSizeStart=1.5&engineSizeStop=1.6";
+                break;
+            default:
+                getParams = "";
+                break;
+        }
     }
 
     @And("the user calls the create endpoint")
@@ -50,6 +77,14 @@ public class StepDefs {
         body = EntityUtils.toString(response.getEntity(), "UTF-8");
     }
 
+    @And("the user calls the get endpoint")
+    public void the_user_calls_get() throws Throwable {
+        HttpGet request = new HttpGet("http://localhost:8080/car/read" + getParams);
+        response = httpClient.execute(request);
+        body = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+    }
+
     @Then("the user should get a response status code of {int}")
     public void the_user_gets_a_response_code(int code) {
         assertEquals(code, response.getStatusLine().getStatusCode());
@@ -61,7 +96,7 @@ public class StepDefs {
         assertEquals(value, jsonBody.get(key).getAsString());
     }
 
-    @And("a results of car 1")
+    @And("a resultSet containing car 1")
     public void the_user_gets_results_of_cars() {
         JsonObject jsonBody = JsonParser.parseString(body).getAsJsonObject();
         JsonObject result = jsonBody.get("results").getAsJsonArray().get(0).getAsJsonObject();
@@ -71,12 +106,11 @@ public class StepDefs {
         assertEquals(expectedResult, result);
     }
 
-    @And("the user calls the get endpoint")
-    public void the_user_calls_get() throws Throwable {
-        HttpGet request = new HttpGet("http://localhost:8080/car/read");
-        response = httpClient.execute(request);
-        body = EntityUtils.toString(response.getEntity(), "UTF-8");
-
+    @And("a resultSet containing nothing")
+    public void the_user_gets_no_results() {
+        JsonObject jsonBody = JsonParser.parseString(body).getAsJsonObject();
+        int result = jsonBody.get("results").getAsJsonArray().size();
+        assertEquals(0, result);
     }
 
 }
