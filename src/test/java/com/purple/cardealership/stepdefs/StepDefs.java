@@ -16,6 +16,7 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import wiremock.org.apache.http.HttpResponse;
 import wiremock.org.apache.http.client.methods.HttpGet;
 import wiremock.org.apache.http.client.methods.HttpPost;
+import wiremock.org.apache.http.client.methods.HttpPut;
 import wiremock.org.apache.http.entity.StringEntity;
 import wiremock.org.apache.http.impl.client.CloseableHttpClient;
 import wiremock.org.apache.http.impl.client.HttpClients;
@@ -42,27 +43,13 @@ public class StepDefs {
     @When("the get request has {word} params")
     public void set_get_params(String paramTypes) {
         switch (paramTypes) {
-            case "no":
-                getParams = "";
-                break;
-            case "brand":
-                getParams = "?brand=asd";
-                break;
-            case "age":
-                getParams = "?ageStart=100&ageStop=200";
-                break;
-            case "mileage":
-                getParams = "?mileageStart=123455&ageStop=123457";
-                break;
-            case "engineSize":
-                getParams = "?engineSizeStart=1.3&engineSizeStop=1.5";
-                break;
-            case "engineSizeFail":
-                getParams = "?engineSizeStart=1.5&engineSizeStop=1.6";
-                break;
-            default:
-                getParams = "";
-                break;
+            case "no" -> getParams = "";
+            case "brand" -> getParams = "?brand=asd";
+            case "age" -> getParams = "?ageStart=100&ageStop=200";
+            case "mileage" -> getParams = "?mileageStart=123455&ageStop=123457";
+            case "engineSize" -> getParams = "?engineSizeStart=1.3&engineSizeStop=1.5";
+            case "engineSizeFail" -> getParams = "?engineSizeStart=1.5&engineSizeStop=1.6";
+            default -> getParams = "";
         }
     }
 
@@ -106,11 +93,37 @@ public class StepDefs {
         assertEquals(expectedResult, result);
     }
 
+    @And("a result equal to car 1")
+    public void the_user_gets_result_of_car() {
+        JsonObject jsonBody = JsonParser.parseString(body).getAsJsonObject();
+        JsonObject result = jsonBody.get("results").getAsJsonObject();
+        JsonObject expectedResult = JsonParser.parseString(
+                        "{\"id\": 1, \"brand\":\"asd\",\"model\":\"asd2\",\"age\":123,\"mileage\":123456,\"engineSize\":1.4}")
+                .getAsJsonObject();
+        assertEquals(expectedResult, result);
+    }
+
+
     @And("a resultSet containing nothing")
     public void the_user_gets_no_results() {
         JsonObject jsonBody = JsonParser.parseString(body).getAsJsonObject();
         int result = jsonBody.get("results").getAsJsonArray().size();
         assertEquals(0, result);
+    }
+
+    @When("the put request has an id parameter that exists")
+    public void the_user_passes_in_id_to_update_existing_car(){
+        jsonString = "{\"id\": \"1\",\"brand\":\"asd\"}";
+    }
+
+    @And("the user calls the update endpoint")
+    public void the_user_calls_put_endpoint() throws Throwable{
+        HttpPut request = new HttpPut("http://localhost:8080/car/update");
+        StringEntity entity = new StringEntity(jsonString);
+        request.addHeader("content-type", "application/json");
+        request.setEntity(entity);
+        response = httpClient.execute(request);
+        body = EntityUtils.toString(response.getEntity(), "UTF-8");
     }
 
 }
